@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var showNewTask = false
     //telling SwiftData to load ToDoItem objects into one array: toDos whenever we add objects in the future:
     @Query var toDos: [ToDoItem]
+    @Environment(\.modelContext) var modelContext
     
     var body: some View {
     
@@ -58,6 +59,9 @@ struct ContentView: View {
                         Text(toDoItem.title)
                     }
                 }
+                
+                //swipe-to-delete
+                .onDelete(perform: deleteToDo)
             }
             .listStyle(.plain)
         }
@@ -68,6 +72,17 @@ struct ContentView: View {
         {
             //providing default values for the NewToDo view
             NewToDoView(showNewTask: $showNewTask, toDoItem: ToDoItem(title: "", isImportant: false))
+        }
+    }
+    
+    //delete func to delete tasks
+    //to enable swipe to delete: look inside the list to see the code(onDelete)
+    
+    func deleteToDo(at offsets: IndexSet)
+    {
+        for offset in offsets{
+            let toDoItem = toDos[offset]
+            modelContext.delete(toDoItem)
         }
     }
 }
