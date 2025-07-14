@@ -48,20 +48,32 @@ struct ContentView: View {
             List
             {
                 ForEach(toDos) { toDoItem in
-                    Text(toDoItem.title)
+                    
+                    if toDoItem.isImportant
+                    {
+                        Text(" ‼ " + toDoItem.title)
+                    }
+                    else
+                    {
+                        Text(toDoItem.title)
+                    }
                 }
             }
+            .listStyle(.plain)
         }
         
         //displays newToDoView if button (+) is clicked (DISPLAYS AT BOTTOM)
         //if it was placed above VStack the view would appear at the top
         if showNewTask
         {
-            NewToDoView()
+            //providing default values for the NewToDo view
+            NewToDoView(showNewTask: $showNewTask, toDoItem: ToDoItem(title: "", isImportant: false))
         }
     }
 }
 
 #Preview {
     ContentView()
+    //adding modelcontainer to see changes or new added to-dos in preview:
+        .modelContainer(for: ToDoItem.self, inMemory: true)
 }
